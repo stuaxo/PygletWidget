@@ -1,73 +1,22 @@
 """
-This module contains the definiton of a pyglet widget for a 
-PySide application: QPygletWidget
+Shared implementation for PySide and QT4.
 
-It also provides a basic usage example.
+pygletwidget.qt4 and pygletwidget.pyside set pygletwidget.QT_FLAVOUR to "PYSIDE" or "QT4"
 """
-import sys
 import pyglet
+import pygletwidget
 pyglet.options['shadow_window'] = False
 pyglet.options['debug_gl'] = False
+
 from pyglet import gl
-from PySide import QtCore, QtGui, QtOpenGL
 
+if pygletwidget.QT_FLAVOUR=="PYSIDE":
+    from PySide import QtCore, QtGui, QtOpenGL
+elif pygletwidget.QT_FLAVOUR=="QT4":
+    from PyQt4 import QtCore, QtGui, QtOpenGL
+else:
+    raise ValueError('pygletwidget.QT_FLAVOUR not set, import pygletwidget.qt4 or pygletwidget.pyside')
 
-class ObjectSpace(object):
-    """ Object space mocker """
-    def __init__(self):
-        # Textures and buffers scheduled for deletion the next time this
-        # object space is active.
-        self._doomed_textures = []
-        self._doomed_buffers = []
-
-
-class Context(object):
-    """
-    pyglet.gl.Context mocker. This is used to make pyglet believe that a valid
-    context has already been setup. (Qt takes care of creating the open gl
-    context)
-
-    _Most of the methods are empty, there is just the minimum required to make
-    it look like a duck..._
-    """
-    # define the same class attribute as pyglet.gl.Context
-    CONTEXT_SHARE_NONE = None
-    CONTEXT_SHARE_EXISTING = 1
-    _gl_begin = False
-    _info = None
-    _workaround_checks = [
-        ('_workaround_unpack_row_length',
-         lambda info: info.get_renderer() == 'GDI Generic'),
-        ('_workaround_vbo',
-         lambda info: info.get_renderer().startswith('ATI Radeon X')),
-        ('_workaround_vbo_finish',
-         lambda info: ('ATI' in info.get_renderer() and
-                       info.have_version(1, 5) and
-                       sys.platform == 'darwin'))]
-
-    def __init__(self, context_share=None):
-        """
-        Setup workaround attr and object spaces (again to mock what is done in
-        pyglet context)
-        """
-        self.object_space = ObjectSpace()
-        for attr, check in self._workaround_checks:
-            setattr(self, attr, None)
-
-    def __repr__(self):
-        return '%s()' % self.__class__.__name__
-
-    def set_current(self):
-        pass
-
-    def destroy(self):
-        pass
-
-    def delete_texture(self, texture_id):
-        pass
-
-    def delete_buffer(self, buffer_id):
-        pass
 
 
 class QPygletWidget(QtOpenGL.QGLWidget):
@@ -153,7 +102,7 @@ class QPygletWidget(QtOpenGL.QGLWidget):
             - create a mock context to fool pyglet
             - setup various opengl rule (only the clear color atm)
         """
-        gl.current_context = Context()
+        gl.current_context = pygletwidget.Context()
         gl.glClearColor(0.0, 0.0, 0.0, 1.0)
         self.on_init()
 
@@ -170,26 +119,3 @@ class QPygletWidget(QtOpenGL.QGLWidget):
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
         self.on_draw()
 
-
-class MyPygletWidget(QPygletWidget):
-    def on_init(self):
-        self.sprite = pyglet.sprite.Sprite(pyglet.resource.image("logo.png"))
-        self.label = pyglet.text.Label(
-            text="This is a pyglet label rendered in a Qt widget :)")
-        self.setMinimumSize(QtCore.QSize(640, 480))
-
-    def on_draw(self):
-        self.sprite.draw()
-        self.label.draw()
-
-
-def main():
-    app = QtGui.QApplication(sys.argv)
-    window = QtGui.QMainWindow()
-    widget = MyPygletWidget()
-    window.setCentralWidget(widget)
-    window.show()
-    app.exec_()
-
-if __name__ == "__main__":
-    main()

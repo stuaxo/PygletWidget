@@ -3,7 +3,7 @@ QPygletWidget
 
 A widget to easily display **one** pyglet scene in a PySide/Qt application.
 
-This has been tested on Ubuntu 12.04, Windows XP and Windows 7.
+This has been tested on Ubuntu 12.04-15.10, Windows XP and Windows 7.
 
 License
 ---------
@@ -15,7 +15,7 @@ Requirements
 -----------------
 
 - Python 2.7
-- PySide
+- PySide or PyQT4
 
 
 Usage
@@ -23,15 +23,18 @@ Usage
 Here is a simple example:
 
 ```python
-from qpygletwidget import QPygletWidget
+import pyglet
+import sys
 
+from PySide import QtCore, QtGui, QtOpenGL
+from pygletwidget.pyside import QPygletWidget
 
 class MyPygletWidget(QPygletWidget):
     def on_init(self):
         self.sprite = pyglet.sprite.Sprite(pyglet.resource.image("logo.png"))
         self.label = pyglet.text.Label(
             text="This is a pyglet label rendered in a Qt widget :)")
-        self.setMinimumSize(QSize(640, 480))
+        self.setMinimumSize(QtCore.QSize(640, 480))
 
     def on_draw(self):
         self.sprite.draw()
@@ -53,12 +56,10 @@ if __name__ == "__main__":
 You can run the script by issuing the following command::
 
 ```bash
-  python qpygletwidget.py
+  python examples/example_pyside.py
 ```
 
-If you are using PyQt instead of PySide, the port should be really easy as the only thing 
-you will probably have to do is to replace **from PySide** by **from PyQt4**
-
+There is a PyQT4 example, the only difference is the import changes to ```from pygletwidget.pyqt4 import QPygletWidget```.
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/ColinDuquesnoy/qpygletwidget/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
