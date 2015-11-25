@@ -1,4 +1,4 @@
-QPygletWidget
+PygletWidget
 =============
 
 A widget to easily display **one** pyglet scene in a PySide/Qt application.
