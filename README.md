@@ -59,9 +59,6 @@ You can run the script by issuing the following command::
   python examples/example_pyside.py
 ```
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/ColinDuquesnoy/qpygletwidget/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
-
 Contributors
 ------------
 
