@@ -3,7 +3,7 @@ PygletWidget
 
 A widget to easily display **one** pyglet scene in a PySide/Qt application.
 
-This has been tested on Ubuntu 12.04-15.10, Windows XP and Windows 7.
+This has been tested on Ubuntu 12.04-17.04, Windows XP and Windows 7.
 
 License
 ---------
@@ -20,7 +20,7 @@ Requirements
 
 Usage
 --------
-Here is a simple example:
+Here is an example for PySide from the examples/ folder:
 
 ```python
 import pyglet
@@ -59,7 +59,10 @@ You can run the script by issuing the following command::
   python examples/example_pyside.py
 ```
 
-There is a PyQT4 example, the only difference is the import changes to ```from pygletwidget.pyqt4 import QPygletWidget```.
-
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/ColinDuquesnoy/qpygletwidget/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
+
+Contributors
+------------
+
+Colin Duquesnoy, Stuart Axon
